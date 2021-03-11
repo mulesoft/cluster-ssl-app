@@ -12,7 +12,7 @@ properties([
   disableConcurrentBuilds(),
   parameters([
     string(name: 'TAG',
-           defaultValue: 'master',
+           defaultValue: '',
            description: 'Git tag to build'),
     string(name: 'GRAVITY_VERSION',
            defaultValue: '7.0.30',
