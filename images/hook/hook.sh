@@ -9,6 +9,8 @@ function upsert_certificate_secrets {
 	cp default-server.pem default-server-with-chain.pem
 	cat ca.pem >> default-server-with-chain.pem
 
+	cp *.{csr,pem} /var/lib/gravity/resources/charts/cluster-ssl/files/
+
 	helm3 upgrade --install cluster-ssl /var/lib/gravity/resources/charts/cluster-ssl
 }
 
