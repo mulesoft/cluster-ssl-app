@@ -5,7 +5,7 @@ registry: ""
 image:
   repository: cluster-ssl-hook
   pullPolicy: Always
-  tag: 1.0.0:w:
+  tag: 1.0.0
 
 rbac:
   create: true
@@ -14,3 +14,9 @@ serviceAccount:
   create: true
   # The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template
   name:
+
+clusterCaSecret:
+  name: cluster-ca
+
+clusterDefaultSecret:
+  name: clusterd-default-ssl

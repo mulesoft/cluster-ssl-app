@@ -25,10 +25,8 @@ hooks:
             hostNetwork: true
             containers:
               - name: install
-                image: quay.io/gravitational/debian-tall:buster
-                command:
-                  - |
-                    helm3 install cluster-ssl /var/lib/gravity/resources/charts/cluster-ssl
+                image: cluster-ssl-hook:latest
+                args: ["install"]
   update:
     job: |
       apiVersion: batch/v1
@@ -48,10 +46,9 @@ hooks:
             hostNetwork: true
             containers:
               - name: update
-                image: quay.io/gravitational/debian-tall:buster
-                command:
-                  - |
-                    helm3 upgrade --install cluster-ssl /var/lib/gravity/resources/charts/cluster-ssl
+                image: cluster-ssl-hook:latest
+                args: ["update"]
+
   uninstall:
     job: |
       apiVersion: batch/v1
