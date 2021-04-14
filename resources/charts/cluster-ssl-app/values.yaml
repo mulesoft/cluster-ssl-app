@@ -1,0 +1,15 @@
+# Default values for cluster-ssl-app chart
+
+registry: ""
+
+image:
+  repository: cluster-ssl-hook
+  pullPolicy: always
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  # The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template
+  name:
