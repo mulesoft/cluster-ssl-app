@@ -1,10 +1,10 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "cluster-ssl-app.fullname" . }}-update-certificates
+  name: {{ template "cluster-ssl.release" . }}-update-certificates
   labels:
-    app: {{ template "cluster-ssl-app.name" . }}
-    chart: {{ template "cluster-ssl-app.chart" . }}
+    app: {{ template "cluster-ssl.name" . }}
+    chart: {{ template "cluster-ssl.chart" . }}
     release: {{ .Release.Name }}
 spec:
   parallelism: 1
@@ -13,13 +13,13 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "cluster-ssl-app.fullname" . }}
+        app: {{ template "cluster-ssl.name" . }}
         release: {{ .Release.Name }}
     spec:
       nodeSelector:
         gravitational.io/k8s-role: master
       restartPolicy: OnFailure
-      serviceAccountName: {{ template "cluster-ssl-app.serviceAccountName" . }}
+      serviceAccountName: {{ template "cluster-ssl.serviceAccountName" . }}
       containers:
         - name: update-certs
           image: "{{ .Values.registry }}{{ .Values.image.repository }}:{{ .Values.tag }}"

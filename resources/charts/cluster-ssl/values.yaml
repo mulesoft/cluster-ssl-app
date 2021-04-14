@@ -4,7 +4,8 @@ registry: ""
 
 image:
   repository: cluster-ssl-hook
-  pullPolicy: always
+  pullPolicy: Always
+  tag: 1.0.0:w:
 
 rbac:
   create: true

@@ -2,17 +2,17 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ template "cluster-ssl-app.fullname" . }}
+  name: {{ template "cluster-ssl.fullname" . }}
   labels:
-    app: {{ template "cluster-ssl-app.name" . }}
-    chart: {{ template "cluster-ssl-app.chart" . }}
+    app: {{ template "cluster-ssl.name" . }}
+    chart: {{ template "cluster-ssl.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ template "cluster-ssl-app.fullname" . }}
+  name: {{ template "cluster-ssl.fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "cluster-ssl-app.serviceAccountName" . }}
+  name: {{ template "cluster-ssl.serviceAccountName" . }}
 {{- end -}}

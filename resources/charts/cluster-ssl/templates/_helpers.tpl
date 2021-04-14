@@ -1,6 +1,6 @@
 Expand the name of the chart.
 */}}
-{{- define ".name" -}}
+{{- define "cluster-ssl.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -9,7 +9,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "cluster-ssl-app.fullname" -}}
+{{- define "cluster-ssl.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -24,15 +24,15 @@ If release name contains chart name it will be used as a full name.
 
 Create chart name and version as used by the chart label.
 */}}
-{{- define "cluster-ssl-app.chart" -}}
+{{- define "cluster-ssl.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 
 {{/* Create the name of the service account to use */}}
-{{- define "cluster-ssl-app.serviceAccountName" -}}
+{{- define "cluster-ssl.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-    {{ default (include "cluster-ssl-app.fullname" .) .Values.serviceAccount.name }}
+    {{ default (include "cluster-ssl.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
