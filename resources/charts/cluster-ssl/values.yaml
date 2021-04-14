@@ -19,4 +19,4 @@ clusterCaSecret:
   name: cluster-ca
 
 clusterDefaultSecret:
-  name: clusterd-default-ssl
+  name: cluster-default-ssl
