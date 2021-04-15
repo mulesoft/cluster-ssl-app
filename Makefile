@@ -34,6 +34,11 @@ IMPORT_OPTIONS := --vendor \
 		$(foreach resource, $(filter-out $(WHITELISTED_RESOURCE_NAMES), $(FILE_LIST)), --exclude="$(resource)") \
 		$(IMPORT_IMAGE_FLAGS)
 
+TELE_BUILD_APP_OPTIONS :=
+		--version=$(VERSION) \
+		--set registry="" \
+		--set tag=$(VERSION)
+
 BUILD_DIR := build
 BINARIES_DIR := bin
 TARBALL := $(BUILD_DIR)/application.tar
@@ -52,8 +57,15 @@ what-version:
 images:
 	cd $(PWD)/images &&	$(MAKE) VERSION=$(VERSION) && cd $(PWD)
 
+# .PHONY because VERSION is dynamic
+.PHONY: $(BUILD_DIR)/resources/app.yaml
+$(BUILD_DIR)/resources/app.yaml: | $(BUILD_DIR)
+	cp --archive resources $(BUILD_DIR)
+	sed -i "s/0.1.0/$(VERSION)/g" $(BUILD_DIR)/resources/charts/cluster-ssl/Chart.yaml
+
 .PHONY: build-app
-build-app: images
+build-app: images $(BUILD_DIR)/resources/app.yaml
+	$(TELE) build $(TELE_BUILD_APP_OPTIONS) -f -o $(BUILD_DIR)/helm-application.tar $(BUILD_DIR)/resources/charts/cluster-ssl
 
 .PHONY: import
 import: images | $(STATEDIR)
