@@ -2,8 +2,8 @@ FROM quay.io/gravitational/debian-grande:buster
 
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends curl jq && \
-    curl https://github.com/cloudflare/cfssl/releases/download/v1.5.0/cfssl_1.5.0_linux_amd64 -o /usr/local/bin/cfssl && \
-    curl https://github.com/cloudflare/cfssl/releases/download/v1.5.0/cfssljson_1.5.0_linux_amd64 -o /usr/local/bin/cfssljson && \
+    curl -L https://github.com/cloudflare/cfssl/releases/download/v1.5.0/cfssl_1.5.0_linux_amd64 -o /usr/local/bin/cfssl && \
+    curl -L https://github.com/cloudflare/cfssl/releases/download/v1.5.0/cfssljson_1.5.0_linux_amd64 -o /usr/local/bin/cfssljson && \
     mkdir -p /root/cfssl
 
 ADD *.json /root/cfssl/
