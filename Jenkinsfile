@@ -26,7 +26,7 @@ properties([
     string(name: 'S3_UPLOAD_PATH',
            defaultValue: '',
            description: 'S3 bucket and path to upload built application image. For example "builds.example.com/cluster-ssl-app".'),
-    booleanParam(name: 'IMPORT_APP_PACKAGE',
+    booleanParam(name: 'PUBLISH_APP_PACKAGE',
                  defaultValue: false,
                  description: 'Import application to S3 bucket'),
     booleanParam(name: 'BUILD_GRAVITY_APP',
@@ -94,7 +94,7 @@ node {
     }
 
     stage('upload application image to S3') {
-      if (isProtectedBranch(env.TAG) && params.IMPORT_APP_PACKAGE && params.BUILD_GRAVITY_APP) {
+      if (isProtectedBranch(env.TAG) && params.PUBLISH_APP_PACKAGE && params.BUILD_GRAVITY_APP) {
         withCredentials([usernamePassword(credentialsId: "${AWS_CREDENTIALS}", usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
           def S3_URL = "s3://${S3_UPLOAD_PATH}/cluster-ssl-app:${APP_VERSION}.tar"
           withEnv(MAKE_ENV + ["S3_URL=${S3_URL}"]) {
