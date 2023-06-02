@@ -3,6 +3,7 @@ component: cluster-ssl
 asset: app
 strategy: helm
 version: 4.0
+slackChannel: pce-alerts-low
 
 requires:
   deployment: false
