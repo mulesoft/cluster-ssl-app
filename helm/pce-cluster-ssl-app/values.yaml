@@ -1,8 +1,8 @@
 image:
-  repository: cluster-ssl
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  registry: artifacts.msap.io
+  org: mulesoft
+  name: pce-cluster-ssl-app
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
