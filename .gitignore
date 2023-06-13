@@ -4,3 +4,7 @@ build
 registry
 bin/
 state/
+
+# Helm
+helm/*/charts/
+requirements.lock
