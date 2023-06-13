@@ -1,7 +1,7 @@
 product: pce
 component: cluster-ssl
 asset: app
-strategy: helm
+strategy: docker
 version: 4.0
 slackChannel: pce-alerts-low
 
