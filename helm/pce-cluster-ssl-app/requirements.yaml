@@ -1,0 +1,4 @@
+dependencies:
+  - name: core-paas-base
+    repository: https://s3-us-west-2.amazonaws.com/mulesoft-ci-helm-chart-repository/stable/core-paas
+    version: 4.x.x
