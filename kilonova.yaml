@@ -1,7 +1,7 @@
 product: pce
 component: cluster-ssl
 asset: app
-version: "4.0.2"
+version: "4.0"
 builder:
   name: docker
   version: "1"
