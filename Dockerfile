@@ -1,7 +1,7 @@
-FROM artifacts.msap.io/mulesoft/core-paas-base-image-ubuntu:5.2.159
+FROM artifacts.msap.io/mulesoft/core-paas-base-image-ubuntu:5.2.185
 
-ARG CFSSL_VERSION=1.6.3
-ARG KUBECTL_VER=1.21.14
+ARG CFSSL_VERSION=1.6.5
+ARG KUBECTL_VER=1.30.3
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 USER root
