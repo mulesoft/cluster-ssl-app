@@ -4,7 +4,6 @@ kind: SystemApplication
 metadata:
   name: cluster-ssl-app
   resourceVersion: 0.0.1
-  namespace: default
 hooks:
   install:
     job: |
@@ -12,7 +11,6 @@ hooks:
       kind: Job
       metadata:
         name: cluster-ssl-app-install
-        namespace: default
       spec:
         parallelism: 1
         completions: 1
@@ -21,7 +19,7 @@ hooks:
           metadata:
             name: cluster-ssl-app-install
           spec:
-            restartPolicy: OnFailure
+            restartPolicy: Never
             hostNetwork: true
             containers:
               - name: install
@@ -33,7 +31,6 @@ hooks:
       kind: Job
       metadata:
         name: cluster-ssl-app-update
-        namespace: default
       spec:
         parallelism: 1
         completions: 1
@@ -42,7 +39,7 @@ hooks:
           metadata:
             name: cluster-ssl-app-update
           spec:
-            restartPolicy: OnFailure
+            restartPolicy: Never
             hostNetwork: true
             containers:
               - name: update
@@ -54,7 +51,6 @@ hooks:
       kind: Job
       metadata:
         name: cluster-ssl-app-uninstall
-        namespace: default
       spec:
         parallelism: 1
         completions: 1
@@ -63,7 +59,7 @@ hooks:
           metadata:
             name: cluster-ssl-app-uninstall
           spec:
-            restartPolicy: OnFailure
+            restartPolicy: Never
             hostNetwork: true
             containers:
               - name: uninstall

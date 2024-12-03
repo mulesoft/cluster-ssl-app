@@ -1,5 +1,6 @@
-FROM quay.io/gravitational/debian-grande:stretch
+FROM artifacts.msap.io/mulesoft/core-paas-base-image-ubuntu:5.2.199
 
+USER root
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends curl jq && \
     curl --fail -L https://github.com/cloudflare/cfssl/releases/download/1.2.0/cfssl_linux-amd64 -o /usr/local/bin/cfssl && \
@@ -11,6 +12,6 @@ ADD *.json /root/cfssl/
 RUN chmod a+x /usr/local/bin/cfssl*
 
 ADD hook.sh /hook.sh
+USER app
 
-RUN test -f /cleanup.sh && sh /cleanup.sh
 ENTRYPOINT ["dumb-init", "/hook.sh"]

@@ -76,7 +76,7 @@ $(BINARIES_DIR):
 download-binaries: $(BINARIES_DIR)
 	for name in gravity tele; \
 	do \
-		curl https://get.gravitational.io/telekube/bin/$(GRAVITY_VERSION)/linux/x86_64/$$name -o $(BINARIES_DIR)/$$name; \
+		aws s3 cp s3://gravity-installers/gravity/release/$(GRAVITY_VERSION)/linux-amd64/$$name $(BINARIES_DIR)/$$name; \
 		chmod +x $(BINARIES_DIR)/$$name; \
 	done
 

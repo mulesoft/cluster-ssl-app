@@ -15,7 +15,7 @@ properties([
            defaultValue: '',
            description: 'Git tag to build'),
     string(name: 'GRAVITY_VERSION',
-           defaultValue: '7.0.30',
+           defaultValue: '9.0.9',
            description: 'gravity/tele binaries version'),
     string(name: 'EXTRA_GRAVITY_OPTIONS',
            defaultValue: '',
@@ -75,8 +75,17 @@ node {
     ]
 
     stage('download gravity/tele binaries for login') {
-      withEnv(MAKE_ENV + ["BINARIES_DIR=${BINARIES_DIR}"]) {
-        sh 'make download-binaries'
+      withCredentials([
+        [
+          $class          : 'UsernamePasswordMultiBinding',
+          credentialsId   : 'aws-onprem',
+          passwordVariable: 'AWS_SECRET_ACCESS_KEY',
+          usernameVariable: 'AWS_ACCESS_KEY_ID'
+        ]
+      ]) {
+        withEnv(MAKE_ENV + ["BINARIES_DIR=${BINARIES_DIR}"]) {
+          sh 'make download-binaries'
+        }
       }
     }
 
