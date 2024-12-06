@@ -91,11 +91,20 @@ node {
 
     stage('export') {
       if (params.BUILD_GRAVITY_APP) {
-        withEnv(MAKE_ENV) {
-          sh """
-            rm -rf ${STATEDIR} && mkdir -p ${STATEDIR}
-            make export"""
-          archiveArtifacts "build/application.tar"
+        withCredentials([
+            [
+              $class          : 'UsernamePasswordMultiBinding',
+              credentialsId   : 'harbor-docker-registry',
+              passwordVariable: 'HARBOR_PASS',
+              usernameVariable: 'HARBOR_USER'
+            ]
+        ]) {
+          withEnv(MAKE_ENV) {
+            sh """
+              rm -rf ${STATEDIR} && mkdir -p ${STATEDIR}
+              make export"""
+            archiveArtifacts "build/application.tar"
+          }
         }
       } else {
         echo 'skipped application export'
