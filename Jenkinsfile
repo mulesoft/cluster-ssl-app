@@ -103,13 +103,19 @@ node {
     }
 
     stage('upload application image to S3') {
-      if (isProtectedBranch(env.TAG) && params.PUBLISH_APP_PACKAGE && params.BUILD_GRAVITY_APP) {
-        withCredentials([usernamePassword(credentialsId: "${AWS_CREDENTIALS}", usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-          def s3Url = "s3://${S3_UPLOAD_PATH}/cluster-ssl-app:${APP_VERSION}.tar"
-          sh "aws s3 cp --only-show-errors build/application.tar ${s3Url}"
+      if (params.PUBLISH_APP_PACKAGE && params.BUILD_GRAVITY_APP) {
+        withCredentials([
+          [
+            $class          : 'UsernamePasswordMultiBinding',
+            credentialsId   : 'aws-onprem',
+            passwordVariable: 'AWS_SECRET_ACCESS_KEY',
+            usernameVariable: 'AWS_ACCESS_KEY_ID'
+          ]
+        ]) {
+          withEnv(MAKE_ENV + ["BINARIES_DIR=${BINARIES_DIR}"]) {
+            sh 'make upload-application'
+          }
         }
-      } else {
-        echo 'skipped application import to S3'
       }
     }
   }

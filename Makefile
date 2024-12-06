@@ -80,6 +80,10 @@ download-binaries: $(BINARIES_DIR)
 		chmod +x $(BINARIES_DIR)/$$name; \
 	done
 
+.PHONY: upload-application
+upload-application: $(TARBALL)
+	aws s3 cp $(TARBALL) s3://onprem-standalone-installers/cluster-ssl-app/cluster-ssl-app-$(VERSION).tar
+
 .PHONY: clean
 clean: clean-state-dir
 	rm -rf $(BUILD_DIR)
