@@ -23,9 +23,6 @@ properties([
     booleanParam(name: 'ADD_GRAVITY_VERSION',
                  defaultValue: false,
                  description: 'Appends "-${GRAVITY_VERSION}" to the tag to be published'),
-    string(name: 'S3_UPLOAD_PATH',
-           defaultValue: '',
-           description: 'S3 bucket and path to upload built application image. For example "builds.example.com/cluster-ssl-app".'),
     booleanParam(name: 'PUBLISH_APP_PACKAGE',
                  defaultValue: false,
                  description: 'Import application to S3 bucket'),
@@ -136,20 +133,4 @@ void workspace(Closure body) {
       body()
     }
   }
-}
-
-def isProtectedBranch(branchOrTagName) {
-  // check if tag or branch empty
-  if (!branchOrTagName?.trim()) {
-    return false
-  }
-
-  String[] protectedBranches = ['master', 'support/.*']
-
-  return protectedBranches.any { protectedBranch ->
-    if (branchOrTagName == protectedBranch) return true
-    def status = sh(script: "git branch --all --contains=${branchOrTagName} | grep '[*[:space:]]*remotes/origin/${protectedBranch}\$'", returnStatus: true)
-    return status == 0
-  }
-  return false
 }
