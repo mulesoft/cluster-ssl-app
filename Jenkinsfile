@@ -23,9 +23,6 @@ properties([
     booleanParam(name: 'ADD_GRAVITY_VERSION',
                  defaultValue: false,
                  description: 'Appends "-${GRAVITY_VERSION}" to the tag to be published'),
-    string(name: 'S3_UPLOAD_PATH',
-           defaultValue: '',
-           description: 'S3 bucket and path to upload built application image. For example "builds.example.com/cluster-ssl-app".'),
     booleanParam(name: 'PUBLISH_APP_PACKAGE',
                  defaultValue: false,
                  description: 'Import application to S3 bucket'),
@@ -91,11 +88,20 @@ node {
 
     stage('export') {
       if (params.BUILD_GRAVITY_APP) {
-        withEnv(MAKE_ENV) {
-          sh """
-            rm -rf ${STATEDIR} && mkdir -p ${STATEDIR}
-            make export"""
-          archiveArtifacts "build/application.tar"
+        withCredentials([
+            [
+              $class          : 'UsernamePasswordMultiBinding',
+              credentialsId   : 'harbor-docker-registry',
+              passwordVariable: 'HARBOR_PASS',
+              usernameVariable: 'HARBOR_USER'
+            ]
+        ]) {
+          withEnv(MAKE_ENV) {
+            sh """
+              rm -rf ${STATEDIR} && mkdir -p ${STATEDIR}
+              make export"""
+            archiveArtifacts "build/application.tar"
+          }
         }
       } else {
         echo 'skipped application export'
@@ -103,13 +109,19 @@ node {
     }
 
     stage('upload application image to S3') {
-      if (isProtectedBranch(env.TAG) && params.PUBLISH_APP_PACKAGE && params.BUILD_GRAVITY_APP) {
-        withCredentials([usernamePassword(credentialsId: "${AWS_CREDENTIALS}", usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-          def s3Url = "s3://${S3_UPLOAD_PATH}/cluster-ssl-app:${APP_VERSION}.tar"
-          sh "aws s3 cp --only-show-errors build/application.tar ${s3Url}"
+      if (params.PUBLISH_APP_PACKAGE && params.BUILD_GRAVITY_APP) {
+        withCredentials([
+          [
+            $class          : 'UsernamePasswordMultiBinding',
+            credentialsId   : 'aws-onprem',
+            passwordVariable: 'AWS_SECRET_ACCESS_KEY',
+            usernameVariable: 'AWS_ACCESS_KEY_ID'
+          ]
+        ]) {
+          withEnv(MAKE_ENV + ["BINARIES_DIR=${BINARIES_DIR}"]) {
+            sh 'make upload-application'
+          }
         }
-      } else {
-        echo 'skipped application import to S3'
       }
     }
   }
@@ -121,20 +133,4 @@ void workspace(Closure body) {
       body()
     }
   }
-}
-
-def isProtectedBranch(branchOrTagName) {
-  // check if tag or branch empty
-  if (!branchOrTagName?.trim()) {
-    return false
-  }
-
-  String[] protectedBranches = ['master', 'support/.*']
-
-  return protectedBranches.any { protectedBranch ->
-    if (branchOrTagName == protectedBranch) return true
-    def status = sh(script: "git branch --all --contains=${branchOrTagName} | grep '[*[:space:]]*remotes/origin/${protectedBranch}\$'", returnStatus: true)
-    return status == 0
-  }
-  return false
 }
