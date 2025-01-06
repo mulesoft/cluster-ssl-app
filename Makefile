@@ -82,7 +82,7 @@ download-binaries: $(BINARIES_DIR)
 
 .PHONY: upload-application
 upload-application: $(TARBALL)
-	aws s3 cp $(TARBALL) s3://onprem-standalone-installers/cluster-ssl-app/cluster-ssl-app-$(VERSION).tar
+	aws s3 cp $(TARBALL) s3://onprem-gravity-apps/cluster-ssl-app/cluster-ssl-app:$(VERSION).tar
 
 .PHONY: clean
 clean: clean-state-dir
