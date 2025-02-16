@@ -8,6 +8,6 @@ builder:
   useContentsForFinalImage: true
 deployment:
   strategy: never
-  helmNamespace: "default"
+  helmNamespace: "pce-core"
 notifications:
   slackChannel: pce-alerts-low

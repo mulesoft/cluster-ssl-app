@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -xe
+alias kubectl="kubectl -n pce-core"
 
 function create_ca_secret {
 	cfssl gencert -initca ca-csr.json | cfssljson -bare ca -
