@@ -3,14 +3,13 @@
 set -xe
 
 kubectl_pce() {
-  kubectl --namespace pce "$@"
+  kubectl --namespace default "$@"
 }
 
 
 function delete_secrets {
 	for sname in cluster-ca cluster-default-ssl cluster-kube-system-ssl
 	do
-		kubectl delete secret "$sname" --ignore-not-found
 		kubectl_pce delete secret "$sname" --ignore-not-found
 	done
 }
@@ -25,10 +24,6 @@ function create_ca_secret {
 }
 
 function create_certificate_secrets {
-#	create pce ns if not exists
-	if ! kubectl get ns pce ; then
-		kubectl create ns pce
-	fi
 	if kubectl_pce get secret/cluster-ca ; then
 		echo "secret/cluster-ca already exists"
         kubectl_pce get secret cluster-ca -o json | jq -r '.data."ca.pem"' | base64 -d > ca.pem
