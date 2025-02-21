@@ -89,12 +89,11 @@ node {
     stage('export') {
       if (params.BUILD_GRAVITY_APP) {
         withCredentials([
-            [
-              $class          : 'UsernamePasswordMultiBinding',
-              credentialsId   : 'harbor-docker-registry',
-              passwordVariable: 'HARBOR_PASS',
-              usernameVariable: 'HARBOR_USER'
-            ]
+            usernamePassword(
+                credentialsId   : 'harbor-docker-registry',
+                passwordVariable: 'HARBOR_PASS',
+                usernameVariable: 'HARBOR_USER'
+            )
         ]) {
           withEnv(MAKE_ENV) {
             sh """
@@ -111,13 +110,12 @@ node {
     stage('upload application image to S3') {
       if (params.PUBLISH_APP_PACKAGE && params.BUILD_GRAVITY_APP) {
         withCredentials([
-          [
-            $class          : 'UsernamePasswordMultiBinding',
-            credentialsId   : 'aws-onprem',
-            passwordVariable: 'AWS_SECRET_ACCESS_KEY',
-            usernameVariable: 'AWS_ACCESS_KEY_ID'
-          ]
-        ]) {
+            usernamePassword(
+                credentialsId   : 'aws-onprem',
+                passwordVariable: 'AWS_SECRET_ACCESS_KEY',
+                usernameVariable: 'AWS_ACCESS_KEY_ID'
+            )
+        ]){
           withEnv(MAKE_ENV + ["BINARIES_DIR=${BINARIES_DIR}"]) {
             sh 'make upload-application'
           }
