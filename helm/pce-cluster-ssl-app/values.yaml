@@ -29,7 +29,8 @@ podSecurityContext:
   # fsGroup: 2000
 
 securityContext:
-  {}
+  runAsNonRoot: true
+  runAsUser: 2020
   # capabilities:
   #   drop:
   #   - ALL
