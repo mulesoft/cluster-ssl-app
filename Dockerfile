@@ -1,4 +1,4 @@
-FROM artifacts.msap.io/mulesoft/core-paas-base-image-ubuntu:5.2.230
+FROM artifacts.msap.io/mulesoft/supply-chain-rhel9-base-image:5.0.14
 
 ARG CFSSL_VERSION=1.6.5
 ARG KUBECTL_VER=1.30.3
